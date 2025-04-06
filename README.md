@@ -18,8 +18,8 @@ This .NET Core 5 project implements a scalable and fault-tolerant PDF generation
 ## 🏗️ Architecture Overview
 
 ```text
-Angular ➝ .NET Core API ➝ Save JSON to Azure Blob ➝ Send Queue to Service Bus ➝
-Workflow Microservice ➝ Read JSON ➝ Chunk PDF Generation ➝ Retry Failed ➝ Merge PDFs ➝ Upload Final PDF
+Angular ➔ .NET Core API ➔ Save JSON to Azure Blob ➔ Send Queue to Service Bus ➔
+Workflow Microservice ➔ Read JSON ➔ Chunk PDF Generation ➔ Retry Failed ➔ Merge PDFs ➔ Upload Final PDF
 ```
 
 ---
@@ -61,7 +61,66 @@ Workflow Microservice ➝ Read JSON ➝ Chunk PDF Generation ➝ Retry Failed �
 
 ---
 
-## 🧪 Unit Tests
+## 🧪 Data Models (from Phase 1)
+
+```csharp
+public class PdfRequestDto
+{
+    public string ProjectId { get; set; }
+    public string ProjectName { get; set; }
+    public List<MachineData> MachineData { get; set; }
+}
+
+public class MachineData
+{
+    public string MachineId { get; set; }
+    public string MachineName { get; set; }
+    public List<SectionDto> Sections { get; set; }
+}
+
+public class SectionDto
+{
+    public string SectionId { get; set; }
+    public string SectionName { get; set; }
+    public List<SubSectionDto> SubSections { get; set; }
+}
+
+public class SubSectionDto
+{
+    public string SubSectionId { get; set; }
+    public string SubSectionName { get; set; }
+    public List<QuestionDto> Questions { get; set; }
+}
+
+public class QuestionDto
+{
+    public string StepId { get; set; }
+    public string StepBody { get; set; }
+    public string StepNotes { get; set; }
+    public bool Padlock { get; set; }
+    public bool Compliant { get; set; }
+    public bool NotCompliant { get; set; }
+    public bool NotApplicable { get; set; }
+    public bool Hazard { get; set; }
+    public List<HazardItem> Hazards { get; set; }
+}
+
+public class HazardItem
+{
+    public string Id { get; set; }
+    public string HazardId { get; set; }
+    public string HazardSource { get; set; }
+    public string Consequences { get; set; }
+    public string HazardName { get; set; }
+    public string HazardTypeId { get; set; }
+    public string InitialHazard { get; set; }
+    public string ControlMeasure { get; set; }
+}
+```
+
+---
+
+## 🥪 Unit Tests
 
 Located in `/ComplexPdfProcessor.Tests`, powered by xUnit:
 
@@ -69,7 +128,7 @@ Located in `/ComplexPdfProcessor.Tests`, powered by xUnit:
 - Tests chunk creation based on hazard/compliance
 - Verifies order of sections/subsections/questions
 
-### 🔁 RetryServiceTests.cs
+### ♻ RetryServiceTests.cs
 - Tests retry logic for failed chunks
 - Mocks PDF generation failures and successful retries
 
@@ -124,6 +183,6 @@ A sample Postman collection is included in the `/Postman` folder for testing end
 
 ---
 
-## 📬 Contact
+## 🛌 Contact
 Created by **Mohit** — [LinkedIn](https://www.linkedin.com/in/mohitkalajain/)  
 Let me know if you want deployment setup, Dockerfile, or GitHub Actions for CI/CD.
