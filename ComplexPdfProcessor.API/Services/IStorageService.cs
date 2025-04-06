@@ -1,0 +1,1 @@
+// IStorageService interface
